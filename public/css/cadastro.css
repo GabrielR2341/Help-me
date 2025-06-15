@@ -1,0 +1,100 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1e1e1e;
+    color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    cursor: url('https://cdn.iconscout.com/icon/free/png-256/cursor-1868870-1586720.png'), auto; 
+}
+
+/* formulario */
+.container {
+    background-color: #333; /* Fundo escuro do container */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 450px;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    color: #f44336; /* Cor vermelha */
+    margin-bottom: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+    color: #fff; /* Texto branco */
+}
+
+input {
+    padding: 12px;
+    margin-top: 5px;
+    font-size: 16px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #222;
+    color: #f2f2f2;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #f44336;
+    outline: none; 
+}
+
+/* botão */
+button.submit-btn {
+    background-color: #f44336;
+    color: #fff;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* efeito no botão */
+button.submit-btn:hover {
+    background-color: #e53935;
+    transform: translateY(-2px);
+}
+
+/* Link para o login */
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-link a {
+    color: #f44336;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.login-link a:hover {
+    color: #e53935; 
+}

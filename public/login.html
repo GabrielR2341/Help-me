@@ -26,6 +26,41 @@
         <p class="register-link">Ainda não tem uma conta? <a href="cadastro.html">Cadastre-se aqui</a></p>
     </div>
 
-    <script src="app.js"></script> 
+    <script>
+document.getElementById('login-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      // Redirecionar com base na permissão
+      if (data.isAdmin) {
+        window.location.href = '/admin'; // Página do painel administrativo
+      } else {
+        window.location.href = 'pedidos.html'; // Página de pedidos
+      }
+    } else {
+      alert(data.message);
+    }
+
+  } catch (err) {
+    console.error('Erro ao fazer login:', err);
+    alert('Erro no login');
+  }
+});
+</script>
+ 
 </body>
 </html>

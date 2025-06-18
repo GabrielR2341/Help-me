@@ -83,33 +83,6 @@ app.post('/login', async (req, res) => {
 });
 
 
-
-app.post('/produtos', async (req, res) => {
-  const { nome, preco, quantidade, tipo } = req.body;
-
-  if (!nome || !preco || !quantidade || !tipo) {
-    return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
-  }
-
-  try {
-    const novoProduto = new Produto({ nome, preco, quantidade, tipo });
-    await novoProduto.save();
-    res.status(201).json({ message: 'Produto criado com sucesso' });
-  } catch (err) {
-    res.status(500).json({ message: 'Erro ao salvar o produto!', error: err });
-  }
-});
-
-app.get('/produtos', async (req, res) => {
-  try {
-    const produtos = await Produto.find({});
-    res.json(produtos);
-  } catch (err) {
-    res.status(500).json({ message: 'Erro!', error: err });
-  }
-});
-
-
 app.get('/users', async (req, res) => {
   try {
     const users = await User.find({});
@@ -143,6 +116,24 @@ app.put('/editUser/:id', async (req, res) => {
     res.json({ success: true, message: 'Usuário atualizado com sucesso!' });
   } catch (err) {
     res.status(500).json({ message: 'Erro!', error: err });
+  }
+});
+
+const Movimentacao = mongoose.model('Movimentacao', new mongoose.Schema({
+  data: { type: Date, default: Date.now },
+  nome: String,
+  tipoMovimentacao: String, // entrada ou saida
+  quantidade: Number,
+  precoUnitario: Number,
+  tipoProduto: String
+}));
+
+app.get('/api/estoque', async (req, res) => {
+  try {
+    const movimentacoes = await Movimentacao.find().sort({ data: -1 });
+    res.json(movimentacoes); // <-- aqui sim retorna JSON!
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao carregar movimentações', error: err.message });
   }
 });
 

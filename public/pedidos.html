@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Faça seu Pedido</title>
+  <link rel="stylesheet" href="./css/pedidos.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Faça seu Pedido</h1>
+
+    <form id="pedido-form">
+      <label for="nomeCliente">Nome do Cliente:</label>
+      <input type="text" id="nomeCliente" name="nomeCliente" required />
+
+      <label for="produto">Produto:</label>
+      <select id="produto" name="produto" required>
+        <!-- Os produtos serão carregados dinamicamente pelo JS -->
+      </select>
+
+      <label for="quantidade">Quantidade:</label>
+      <input type="number" id="quantidade" name="quantidade" min="1" value="1" required />
+
+      <button type="submit">Enviar Pedido</button>
+    </form>
+
+    <div id="mensagem"></div>
+  </div>
+
+  <script>
+    async function carregarProdutos() {
+      try {
+        const resposta = await fetch('/produtos');
+        if (!resposta.ok) throw new Error('Erro ao carregar produtos');
+        const produtos = await resposta.json();
+
+        const select = document.getElementById('produto');
+        select.innerHTML = ''; // limpa opções
+
+        produtos.forEach(produto => {
+          const option = document.createElement('option');
+          option.value = produto._id;
+          option.textContent = `${produto.nome} - R$${produto.preco.toFixed(2)}`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error(error);
+        document.getElementById('mensagem').textContent = 'Erro ao carregar produtos.';
+      }
+    }
+
+    document.getElementById('pedido-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nomeCliente = document.getElementById('nomeCliente').value.trim();
+      const produtoId = document.getElementById('produto').value;
+      const quantidade = parseInt(document.getElementById('quantidade').value);
+
+      if (!nomeCliente || !produtoId || quantidade <= 0) {
+        alert('Por favor, preencha todos os campos corretamente.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/pedidos', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ nomeCliente, produtoId, quantidade })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('mensagem').textContent = 'Pedido enviado com sucesso!';
+          document.getElementById('pedido-form').reset();
+        } else {
+          document.getElementById('mensagem').textContent = 'Erro ao enviar pedido: ' + (data.message || '');
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById('mensagem').textContent = 'Erro ao enviar pedido.';
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', carregarProdutos);
+  </script>
+</body>
+</html>

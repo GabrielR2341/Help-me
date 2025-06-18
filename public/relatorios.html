@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relatório de Estoque</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: #f44336;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Relatório de Movimentação do Estoque</h1>
+
+  <table id="tabela-relatorio">
+    <thead>
+      <tr>
+        <th>Data da Movimentação</th>
+        <th>Nome</th>
+        <th>Tipo de Movimentação</th>
+        <th>Quantidade</th>
+        <th>Preço Unitário (R$)</th>
+        <th>Tipo do Produto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Conteúdo será preenchido pelo JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    async function carregarMovimentacoes() {
+      try {
+        const resposta = await fetch('/api/estoque');
+        if (!resposta.ok) throw new Error('Erro ao buscar dados');
+        
+        const dados = await resposta.json();
+
+        if (!Array.isArray(dados)) throw new Error('Formato de dados inválido');
+
+        const tabela = document.querySelector('#tabela-relatorio tbody');
+        tabela.innerHTML = '';
+
+        dados.forEach(mov => {
+          const linha = document.createElement('tr');
+
+          const data = new Date(mov.data);
+          const dataFormatada = data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+          linha.innerHTML = `
+            <td>${dataFormatada}</td>
+            <td>${mov.nome}</td>
+            <td>${mov.tipoMovimentacao.charAt(0).toUpperCase() + mov.tipoMovimentacao.slice(1)}</td>
+            <td>${mov.quantidade}</td>
+            <td>${mov.precoUnitario.toFixed(2)}</td>
+            <td>${mov.tipoProduto}</td>
+          `;
+          tabela.appendChild(linha);
+        });
+
+      } catch (erro) {
+        alert('Erro ao carregar movimentações: ' + erro.message);
+        console.error(erro);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', carregarMovimentacoes);
+  </script>
+</body>
+</html>

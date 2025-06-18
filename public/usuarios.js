@@ -50,7 +50,7 @@ async function loadUsers() {
         userCard.innerHTML = `
             <h3>${user.username}</h3>
             <p class="password">Senha: ${user.password}</p>
-            <p class="admin">${user.isAdmin ? 'Admin' : 'Usuário Normal'}</p>
+            <p class="admin">${user.isAdmin ? 'Admin' : 'Cliente'}</p>
             <div class="button-container">
                 <button onclick="openEditModal('${user._id}', '${user.username}', '${user.password}', ${user.isAdmin})">Editar</button>
                 <button onclick="deleteUser('${user._id}')">Excluir</button>
